@@ -1,0 +1,22 @@
+{
+  "name": "sprint01",
+  "version": "1.0.0",
+  "description": "Zoom Speed Dating app",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markussite/Zoom-Speed-Dating.git"
+  },
+  "author": "Hermes, Nuri, Hasan, Markus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/markussite/Zoom-Speed-Dating/issues"
+  },
+  "homepage": "https://github.com/markussite/Zoom-Speed-Dating#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
