@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
 const homeController = require("./controllers/homeController")
 
 //Add routes for the courses, page, contact page and contact form submission.
-app.get("/courses", homeController.showCourses);
+app.get("/homepage", homeController.showHomepage);
 app.get("/contact", homeController.showSignUp);
 app.post("/contact", homeController.postedSignUpForm);
 //Add error handlers as middleware functions.
