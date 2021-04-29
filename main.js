@@ -23,16 +23,16 @@ app.use(
 );
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Welcome to Zoom Speed Dating app!");
-});
+
 
 const homeController = require("./controllers/homeController")
 
 //Add routes for the courses, page, contact page and contact form submission.
 app.get("/homepage", homeController.showHomepage);
 app.get("/contact", homeController.showSignUp);
+
 app.post("/contact", homeController.postedSignUpForm);
+app.get("/", homeController.showUser);
 //Add error handlers as middleware functions.
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
