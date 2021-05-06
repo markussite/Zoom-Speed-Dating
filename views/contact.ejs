@@ -1,7 +1,17 @@
-<form action="/contact" method="post">
+<form action="/saveUser" method="post">
   <label for="name">Name</label>
   <input type="text" name="name">
-  <label for="email">Email</label>
-  <input type="email" name="email">
+  <label for="geschlecht">Geschlecht</label>
+  <input type="text" name="geschlecht">
+  <label for="alter">Alter</label>
+  <input type="text" pattern=[12-99]{2} name="alter">
+  <label for="hobbys">Hobbys</label>
+  <input type="text" name="hobbys">
+  <label for="interessiert">Interessiert in</label>
+  <input type="text" name="interessiert">
+  <label for="wohnort">Wohnort</label>
+  <input type="text" name="wohnort">
+  <label for="religion">Religion</label>
+  <input type="text" name="religion">
   <input type="submit" value="Submit">
 </form>

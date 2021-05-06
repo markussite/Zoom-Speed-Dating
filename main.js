@@ -1,3 +1,14 @@
+const mongoose = require("mongoose");
+mongoose.connect(
+  "mongodb://localhost:27017/zoomSpeedDating_db",
+  {useNewUrlParser: true}
+);
+const db = mongoose.connection;
+
+db.once("open", () => {
+  console.log("Successfully connected to MongoDB using Mongoose!");
+})
+
 //Require the error handler controller.
 const errorController = require("./controllers/errorController")
 
@@ -25,14 +36,13 @@ app.use(express.json());
 
 
 
-const homeController = require("./controllers/homeController")
-
+const homeController = require("./controllers/homeController");
+const userController = require("./controllers/userController");
 //Add routes for the courses, page, contact page and contact form submission.
-app.get("/homepage", homeController.showHomepage);
-app.get("/contact", homeController.showSignUp);
-
-app.post("/contact", homeController.postedSignUpForm);
-app.get("/", homeController.showUser);
+app.get("/", homeController.showHomepage);
+app.get("/addUser", userController.getUsersPage);
+app.get("/user", userController.getAllUser);
+app.get("/saveUser", userController.saveUser);
 //Add error handlers as middleware functions.
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
