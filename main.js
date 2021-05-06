@@ -42,7 +42,7 @@ const userController = require("./controllers/userController");
 app.get("/", homeController.showHomepage);
 app.get("/addUser", userController.getUsersPage);
 app.get("/user", userController.getAllUser);
-app.get("/saveUser", userController.saveUser);
+app.post("/saveUser", userController.saveUser);
 //Add error handlers as middleware functions.
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);

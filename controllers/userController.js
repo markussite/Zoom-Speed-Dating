@@ -22,10 +22,11 @@ exports.getUsersPage = (req, res) => {
 };
 
 exports.saveUser = (req, res) => {
+  console.log(req.body);
   let newUser = new User( {
     name: req.body.name,
     geschlecht: req.body.geschlecht,
-    alter: reg.body.alter,
+    alter: req.body.alter,
     hobbys: req.body.hobbys,
     sucht: req.body.sucht,
     interessiert: req.body.interessiert,
@@ -35,7 +36,7 @@ exports.saveUser = (req, res) => {
 
   newUser.save()
     .then( () => {
-      res.render("thanks");
+      res.render("homepage");
     })
     .catch(error => {
       res.send(error);
