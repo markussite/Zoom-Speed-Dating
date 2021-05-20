@@ -39,18 +39,15 @@ app.use(express.json());
 const homeController = require("./controllers/homeController");
 const userController = require("./controllers/userController");
 //Add routes for the courses, page, contact page and contact form submission.
-app.get("/", homeController.showHomepage);
+app.get("/", userController.getUsersPage);
 app.get("/addUser", userController.getUsersPage);
-app.get("/user", userController.getAllUser);
+app.get("/showUser", userController.getAllUser);
 app.post("/saveUser", userController.saveUser);
 //Add error handlers as middleware functions.
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
 
-app.listen(app.get("port"), () => {
-  console.log(
-    `Server running at http://localhost:${app.get(
-      "port"
-    )}`
-  );
+app.set("port", process.env.PORT || 3000);
+const server = app.listen(app.get("port"), () => {
+    console.log(`Server running at http://localhost: ${app.get("port")}`);
 });

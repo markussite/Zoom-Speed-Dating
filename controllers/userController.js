@@ -36,7 +36,7 @@ exports.saveUser = (req, res) => {
 
   newUser.save()
     .then( () => {
-      res.render("homepage");
+      res.render("showUser");
     })
     .catch(error => {
       res.send(error);
