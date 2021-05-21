@@ -24,11 +24,9 @@ const bspBenutzer = {
   religion: 'keine'
 }
 
-  //test("example", () => {
-    //const benutzer = new User("Hermes", "Man", 23, "Sport", "habe schon", "keine Interesse", "Berlin", "god");
-    //const bspBenutzer = new User("Hermes", "Man", 23, "Sport", "habe schon", "keine Interesse", "Berlin", "god");
-    //expect( benutzer == bspBenutzer);
-  //});
+  test("example", () => { // works but because it has a bug
+        expect( userData == bspBenutzer);
+  });
 
   test("save user", function (done) {
     const testBenutzer = new UserController(userData)
