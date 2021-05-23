@@ -1,3 +1,11 @@
+const methodOverride = require("method-override")
+app.use(
+  methodOverride(
+    "_method", {
+  methods: ["POST", "GET"]
+}))
+
+
 const mongoose = require("mongoose");
 mongoose.connect(
   "mongodb://localhost:27017/zoomSpeedDating_db",
