@@ -1,11 +1,11 @@
 {
-  "name": "sprint02",
+  "name": "sprint04",
   "version": "1.0.0",
   "description": "Zoom Speed Dating app",
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "start dev": "nodemon main.js",
+    "startdev": "nodemon main.js",
     "mongo": "docker-compose up -d",
     "mongobash": "docker-compose exec mongo bash",
     "test": "jest"
@@ -25,7 +25,10 @@
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
     "http-status-codes": "^2.1.4",
-    "mongoose": "^5.12.10"
+    "install": "^0.13.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.12.10",
+    "nodemon": "^2.0.7"
   },
   "devDependencies": {
     "jest": "^26.6.3"

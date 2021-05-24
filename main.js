@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 mongoose.connect(
   "mongodb://localhost:27017/zoomSpeedDating_db",
-  {useNewUrlParser: true}
+  {useNewUrlParser: true, useUnifiedTopology: true }
 );
 const db = mongoose.connection;
 
@@ -41,13 +41,13 @@ const userController = require("./controllers/userController");
 //Add routes for the courses, page, contact page and contact form submission.
 app.get("/", userController.getUsersPage);
 app.get("/addUser", userController.getUsersPage);
-app.get("/showUser", userController.getAllUser);
+app.get("/showUsers", userController.getAllUser);
 app.post("/saveUser", userController.saveUser);
 //Add error handlers as middleware functions.
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
 
-app.set("port", process.env.PORT || 3000);
+
 const server = app.listen(app.get("port"), () => {
     console.log(`Server running at http://localhost: ${app.get("port")}`);
 });
