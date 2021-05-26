@@ -1,3 +1,9 @@
+//require the modules
+const passportLocalMongoose = require("passport-local-mongoose")
+userSchema.plugin(passportLocalMongoose, {
+usernameField: "email"
+});
+
 const mongoose = require("mongoose"),
   userSchema = mongoose.Schema({
   name: String,

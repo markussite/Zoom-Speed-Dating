@@ -1,4 +1,32 @@
-const mongoose = require("mongoose");
+//require the modules
+const passport = require("passport"), //passport module
+  cookieParser = require("cookie-parser"),
+  expressSession = require("express-session"),
+  User = require("./models/user");
+
+router.use(cookieParser("secretCuisine123"));
+router.use(expressSession({
+  secret: "secretCuisine123",
+  cookie: {
+    maxAge: 4000000
+  },
+  resave: false,
+  saveUninitialized: false
+}));
+router.use(passport.initialize());
+router.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+const connectFlash = require("connect-flash"); //connect-flash module
+router.use(connectFlash())
+router.use((req, res, next) => {
+  res.locals.flashMessages = req.flash();
+  next();
+});
+
+const mongoose = require("mongoose"); //mongoose module
 mongoose.connect(
   "mongodb://localhost:27017/zoomSpeedDating_db",
   {useNewUrlParser: true, useUnifiedTopology: true }
@@ -34,6 +62,10 @@ app.use(
 );
 app.use(express.json());
 
+//add a login route to main.js
+router.get("/users/login", usersController.login);
+router.post("/users/login", usersController.authenticate);
+router.get("/users/logout", usersController.logout, usersController.redirectView);
 
 
 const homeController = require("./controllers/homeController");
