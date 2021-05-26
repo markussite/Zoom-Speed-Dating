@@ -26,6 +26,12 @@ router.use((req, res, next) => {
   next();
 });
 
+const expressValidator = require("express-validator") //express validator module
+router.use(expressValidator())
+//add validation middleware to the user reate route
+router.post("/users/create", userController.validate, userController.create, userController.redirectView);
+
+
 const mongoose = require("mongoose"); //mongoose module
 mongoose.connect(
   "mongodb://localhost:27017/zoomSpeedDating_db",
