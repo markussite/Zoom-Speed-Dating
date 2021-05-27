@@ -45,7 +45,9 @@ const router = express.Router();
 const homeController = require("./controllers/homeController");
 const userController = require("./controllers/userController");
 //Add routes for the courses, page, contact page and contact form submission.
-app.get("/", router);
+
+app.use("/", router);
+//app.get("/", homeController.showHomepage);
 router.get("/users", userController.index, userController.indexView);
 router.get("users/new", userController.new);
 router.post("users/create", userController.create, userController.redirectView);
