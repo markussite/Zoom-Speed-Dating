@@ -1,44 +1,109 @@
 const User = require("../models/user");
+  getuserParams = (body) => {
+    return {
+      name: body.name,
+      email: body.email,
+      geschlecht: body.geschlecht,
+      alter: parseInt(body.alter),
+      hobbys: body.hobbys,
+      sucht: body.sucht,
+      interessiert: body.interessiert,
+      wohnort: body.wohnort,
+      religion: body.religion
+    }
+  };
 
-exports.getAllUser = (req, res) => {
-  User.find({})
-    .exec()
-    .then((users) => {
-      res.render("showUser", {
-        users: users
+module.exports = {
+  index: (req, res, next) => {
+    User.find()
+      .then(users => {
+        res.locals.users = users;
+        next();
+      })
+      .catch(error => {
+        console.log(`Error fetching users:${error.message}`);
+        next(error);
       });
-    })
-    .catch((error) => {
-      console.log(error.message);
-      return[];
-    })
-    .then(() => {
-      console.log("promise complete");
-    });
-};
+    },
+    indexView: (req, res) => {
+      res.render("users/index");
+    },
+    new: (req, res) => {
+      res.render("users/new");
+    },
+    create: (req, res, next) => {
+      let userParams = getUserParams(req.body);
+      User.create(userParams)
+        .then(user => {
+          res.locals.redirect = "/users";res.locals.user = user;
+          next();
+        }).catch(error => {
+          console.log(`Error saving user:${error.message}`);
+          next(error);
+        });
+      },
 
-exports.getUsersPage = (req, res) => {
-  res.render("contact");
-};
+      redirectView: (req, res, next) => {
+        let redirectPath = res.locals.redirect;
+        if (redirectPath) res.redirect(redirectPath);
+        else next();
+      },
+      show: (req, res, next) => {
+        var userId = req.params.id;
+        User.findById(subscriberId)
+        .then(subscriber => {
+          res.locals.user = user;
+          next();
+        })
+        .catch(error => {
+          console.log(`Error fetching subscriber by ID: ${error.message}`)
+          next(error);
+        });
+      },
+      showView: (req, res) => {
+        res.render("users/show");
+        },
 
-exports.saveUser = (req, res) => {
-  console.log(req.body);
-  let newUser = new User( {
-    name: req.body.name,
-    geschlecht: req.body.geschlecht,
-    alter: req.body.alter,
-    hobbys: req.body.hobbys,
-    sucht: req.body.sucht,
-    interessiert: req.body.interessiert,
-    wohnort: req.body.wohnort,
-    religion: req.body.religion
-  });
+        edit: (req, res, next) => {
+          var userId = req.params.id;
+          Subscriber.findById(userId)
+          .then(user => {
+          res.render("users/edit", {
+            user: user
+          });
+        }).catch(error => {
+          console.log(`Error fetching subscriber by ID: ${error.message}`);
+          next(error);
+        });
+      },
 
-  newUser.save()
-    .then( () => {
-      res.render("showUser");
-    })
-    .catch(error => {
-      res.send(error);
-    });
-};
+      update: (req, res, next) => {
+        let userId = req.params.id,
+        userParams = getUserParams(req.body);
+
+        User.findByIdAndUpdate(userId, {
+          $set: userParams
+        })
+          .then(user => {
+            res.locals.redirect = `/users/${userId}`;
+            res.locals.user = user;
+            next();
+          })
+          .catch(error => {
+            console.log(`Error updating user by ID: ${error.message}`);
+            next(error);
+          });
+        },
+        delete: (req, res, next) => {
+          let userId = req.params.id;
+          User.findByIdAndRemove(userId)
+          .then(() => {
+            res.locals.redirect = "/users";
+            next();
+          })
+          .catch(error => {
+            console.log(`Error deleting user by ID: ${error.message}`);
+            next();
+          });
+        }
+      };
