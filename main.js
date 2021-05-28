@@ -1,4 +1,38 @@
-const mongoose = require("mongoose");
+//require the modules
+const passport = require("passport"), //passport module
+  cookieParser = require("cookie-parser"),
+  expressSession = require("express-session"),
+  User = require("./models/user");
+
+router.use(cookieParser("secretCuisine123"));
+router.use(expressSession({
+  secret: "secretCuisine123",
+  cookie: {
+    maxAge: 4000000
+  },
+  resave: false,
+  saveUninitialized: false
+}));
+router.use(passport.initialize());
+router.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+const connectFlash = require("connect-flash"); //connect-flash module
+router.use(connectFlash())
+router.use((req, res, next) => {
+  res.locals.flashMessages = req.flash();
+  next();
+});
+
+const expressValidator = require("express-validator") //express validator module
+router.use(expressValidator())
+//add validation middleware to the user reate route
+router.post("/users/create", userController.validate, userController.create, userController.redirectView);
+
+
+const mongoose = require("mongoose"); //mongoose module
 mongoose.connect(
   "mongodb://localhost:27017/zoomSpeedDating_db",
   {useNewUrlParser: true, useUnifiedTopology: true }
@@ -55,6 +89,7 @@ router.get("users/:id", userController.show, userController.showView);
 router.get("users/:id/edit", userController.edit);
 router.put("users/:id/update", userController.update, userController.redirectView);
 router.delete("/users/:id/delete", userController.delete, userController.redirectView);
+
 
 //Add error handlers as middleware functions.
 app.use(errorController.pageNotFoundError);

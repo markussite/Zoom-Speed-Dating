@@ -1,5 +1,26 @@
+<div class="flashes">
+<% if (flashMessages) { %>
+  <% if (flashMessages.success) { %>
+    <div class="flash success"><%= flashMessages.success %></div>
+  <% } else if (flashMessages.error) { %>
+    <div class="flash error"><%= flashMessages.error %></div>
+  <% } %>
+<% } %>
+</div>
 <body>
-  <div id="nav">NAVIGATION</div>
+  <div id="nav">NAVIGATION
+    <div class="login">
+      <% if (loggedIn) { %>
+        <p>Logged in as
+          <a href="<%=`/users/${currentUser._id}`%>">
+      <%= currentUser.fullName %></a>
+          <a href="/users/logout">Log out</a>
+        </p>
+      <%} else {%>
+        <a href="/users/login">Log In</a>
+      <% } %>
+    </div>
+  </div>
   <%- body %>
   <div id="footer">FOOTER</div>
 </body>
