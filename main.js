@@ -4,34 +4,6 @@ const passport = require("passport"), //passport module
   expressSession = require("express-session"),
   User = require("./models/user");
 
-router.use(cookieParser("secretCuisine123"));
-router.use(expressSession({
-  secret: "secretCuisine123",
-  cookie: {
-    maxAge: 4000000
-  },
-  resave: false,
-  saveUninitialized: false
-}));
-router.use(passport.initialize());
-router.use(passport.session());
-passport.use(User.createStrategy());
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-const connectFlash = require("connect-flash"); //connect-flash module
-router.use(connectFlash())
-router.use((req, res, next) => {
-  res.locals.flashMessages = req.flash();
-  next();
-});
-
-const expressValidator = require("express-validator") //express validator module
-router.use(expressValidator())
-//add validation middleware to the user reate route
-router.post("/users/create", userController.validate, userController.create, userController.redirectView);
-
-
 const mongoose = require("mongoose"); //mongoose module
 mongoose.connect(
   "mongodb://localhost:27017/zoomSpeedDating_db",
@@ -65,7 +37,7 @@ app.use(express.static("public"))
 //Require the express-ejs-layouts module
 const layouts = require("express-ejs-layouts");
 app.set("view engine", "ejs"); // Set the application to use ejs.
-app.use(layouts); //Set the application to use the layout.
+
 
 //Tell the Express.js app to use body-parser for processing URL-encoded and JSON parameters
 app.use(
@@ -84,12 +56,42 @@ app.use("/", router);
 //app.get("/", homeController.showHomepage);
 router.get("/users", userController.index, userController.indexView);
 router.get("users/new", userController.new);
-router.post("users/create", userController.create, userController.redirectView);
 router.get("users/:id", userController.show, userController.showView);
 router.get("users/:id/edit", userController.edit);
 router.put("users/:id/update", userController.update, userController.redirectView);
 router.delete("/users/:id/delete", userController.delete, userController.redirectView);
 
+router.use(cookieParser("secretzoomSpeedDating123"));
+router.use(expressSession({
+  secret: "secretzoomSpeedDating123",
+  cookie: {
+    maxAge: 4000000
+  },
+  resave: false,
+  saveUninitialized: false
+}));
+
+router.use(passport.initialize());
+router.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+const connectFlash = require("connect-flash"); //connect-flash module
+router.use(connectFlash())
+router.use((req, res, next) => {
+  res.locals.flashMessages = req.flash();
+  next();
+});
+
+router.use(layouts); //Set the application to use the layout.
+
+const expressValidator = require("express-validator") //express validator module
+router.use(expressValidator())
+//add validation middleware to the user reate route
+router.post("/users/create", function(req,res) {
+  userController.validate, userController.create, userController.redirectView
+});
 
 //Add error handlers as middleware functions.
 app.use(errorController.pageNotFoundError);

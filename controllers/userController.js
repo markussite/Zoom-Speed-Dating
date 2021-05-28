@@ -107,10 +107,13 @@ module.exports = {
           });
         }
       };
-  
+
   //add the login action to render my form for browser viewing
 login: (req, res) => {
   res.render("users/login");
+  //local variables to the response through middleware
+  res.locals.loggedIn = req.isAuthenticated();
+  res.locals.currentUser = req.user;
 }
 
 //add passport registration and flash messaging in the create action
@@ -163,9 +166,7 @@ authenticate: passport.authenticate("local", {
   successRedirect: "/",
   successFlash: "Logged in!"
 })
-//local variables to the response through middleware
-res.locals.loggedIn = req.isAuthenticated();
-res.locals.currentUser = req.user;
+
 //logout action
 logout: (req, res, next) => {
   req.logout();

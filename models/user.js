@@ -1,8 +1,4 @@
-//require the modules
-const passportLocalMongoose = require("passport-local-mongoose")
-userSchema.plugin(passportLocalMongoose, {
-usernameField: "email"
-});
+
 
 const mongoose = require("mongoose"),
   { Schema } = mongoose,
@@ -35,4 +31,10 @@ const mongoose = require("mongoose"),
 userSchema.methods.getInfo = function () {
   return `Name: ${this.name} Email: ${this.email}`;
 };
+
+//require the modules
+const passportLocalMongoose = require("passport-local-mongoose")
+userSchema.plugin(passportLocalMongoose, {
+usernameField: "email"
+});
 module.exports = mongoose.model("User", userSchema);
