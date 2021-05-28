@@ -52,6 +52,13 @@ const express = require("express"),
 
 app.set("port",process.env.PORT || 3000);
 
+const methodOverride = require("method-override")
+app.use(
+  methodOverride(
+    "_method", {
+  methods: ["POST", "GET"]
+}));
+
 //Enables static assets
 app.use(express.static("public"))
 
@@ -68,19 +75,22 @@ app.use(
 );
 app.use(express.json());
 
-//add a login route to main.js
-router.get("/users/login", usersController.login);
-router.post("/users/login", usersController.authenticate);
-router.get("/users/logout", usersController.logout, usersController.redirectView);
-
-
+const router = express.Router();
 const homeController = require("./controllers/homeController");
 const userController = require("./controllers/userController");
 //Add routes for the courses, page, contact page and contact form submission.
-app.get("/", userController.getUsersPage);
-app.get("/addUser", userController.getUsersPage);
-app.get("/showUsers", userController.getAllUser);
-app.post("/saveUser", userController.saveUser);
+
+app.use("/", router);
+//app.get("/", homeController.showHomepage);
+router.get("/users", userController.index, userController.indexView);
+router.get("users/new", userController.new);
+router.post("users/create", userController.create, userController.redirectView);
+router.get("users/:id", userController.show, userController.showView);
+router.get("users/:id/edit", userController.edit);
+router.put("users/:id/update", userController.update, userController.redirectView);
+router.delete("/users/:id/delete", userController.delete, userController.redirectView);
+
+
 //Add error handlers as middleware functions.
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);

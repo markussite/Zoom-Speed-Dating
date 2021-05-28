@@ -1,0 +1,27 @@
+<form action="<%=`/users/${user._id}/update➥?_method=PUT` %>" method="post">
+  <label for="inputname">Name</label>
+  <input type="text" name="name" id="inputName" value="<%=user.name %>" placeholder="Name" autofocus>
+  <br>
+  <label for="inputEmail">Email address</label>
+  <input type="email" name="email" id="inputEmail" value="<%=user.email %>" placeholder="Email address" required>
+  <br>
+  <label for="inputGeschlecht">Geschlecht</label>
+  <input type="text" name="geschlecht" id="inputGeschlecht" value="<%=user.geschlecht %>">
+  <br>
+  <label for="inputAlter">Alter</label>
+  <input type="text" pattern=[12-99] name="alter" id="inputAlter" value="<%=user.alter %>">
+  <br>
+  <label for="inputHobbys">Hobbys</label>
+  <input type="text" name="hobbys" id="inputHobbys" value="<%=user.hobbys %>">
+  <br>
+  <label for="inputInteressiert">Interessiert in</label>
+  <input type="text" name="interessiert" id="inputInteressiert" value="<%=user.interessiert %>">
+  <br>
+  <label for="inputWohnort">Wohnort</label>
+  <input type="text" name="wohnort" id="inputWohnort" value="<%=user.wohnort %>">
+  <br>
+  <label for="inputReligion">Religion</label>
+  <input type="text" name="religion" id="inputReligion" value="<%=user.religion %>">
+  <br>
+  <input type="submit" value="Submit">
+</form>

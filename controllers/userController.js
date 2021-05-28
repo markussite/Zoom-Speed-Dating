@@ -1,24 +1,114 @@
 const User = require("../models/user");
 const passport = require("passport");
+  getuserParams = (body) => {
+    return {
+      name: body.name,
+      email: body.email,
+      geschlecht: body.geschlecht,
+      alter: parseInt(body.alter),
+      hobbys: body.hobbys,
+      sucht: body.sucht,
+      interessiert: body.interessiert,
+      wohnort: body.wohnort,
+      religion: body.religion
+    }
+  };
 
-exports.getAllUser = (req, res) => {
-  User.find({})
-    .exec()
-    .then((users) => {
-      res.render("showUser", {
-        users: users
+module.exports = {
+  index: (req, res, next) => {
+    User.find()
+      .then(users => {
+        res.locals.users = users;
+        next();
+      })
+      .catch(error => {
+        console.log(`Error fetching users:${error.message}`);
+        next(error);
       });
-    })
-    .catch((error) => {
-      console.log(error.message);
-      return[];
-    })
-    .then(() => {
-      console.log("promise complete");
-    });
-};
+    },
+    indexView: (req, res) => {
+      res.render("users/index");
+    },
+    new: (req, res) => {
+      res.render("users/new");
+    },
+    create: (req, res, next) => {
+      let userParams = getUserParams(req.body);
+      User.create(userParams)
+        .then(user => {
+          res.locals.redirect = "/users";res.locals.user = user;
+          next();
+        }).catch(error => {
+          console.log(`Error saving user:${error.message}`);
+          next(error);
+        });
+      },
+            redirectView: (req, res, next) => {
+        let redirectPath = res.locals.redirect;
+        if (redirectPath) res.redirect(redirectPath);
+        else next();
+      },
+      show: (req, res, next) => {
+        var userId = req.params.id;
+        User.findById(userId)
+        .then(user => {
+          res.locals.user = user;
+          next();
+        })
+        .catch(error => {
+          console.log(`Error fetching subscriber by ID: ${error.message}`)
+          next(error);
+        });
+      },
+      showView: (req, res) => {
+        res.render("users/show");
+        },
 
-//add the login action to render my form for browser viewing
+        edit: (req, res, next) => {
+          var userId = req.params.id;
+          User.findById(userId)
+          .then(user => {
+          res.render("users/edit", {
+            user: user
+          });
+        }).catch(error => {
+          console.log(`Error fetching subscriber by ID: ${error.message}`);
+          next(error);
+        });
+      },
+
+      update: (req, res, next) => {
+        let userId = req.params.id,
+        userParams = getUserParams(req.body);
+
+        User.findByIdAndUpdate(userId, {
+          $set: userParams
+        })
+          .then(user => {
+            res.locals.redirect = `/users/${userId}`;
+            res.locals.user = user;
+            next();
+          })
+          .catch(error => {
+            console.log(`Error updating user by ID: ${error.message}`);
+            next(error);
+          });
+        },
+        delete: (req, res, next) => {
+          let userId = req.params.id;
+          User.findByIdAndRemove(userId)
+          .then(() => {
+            res.locals.redirect = "/users";
+            next();
+          })
+          .catch(error => {
+            console.log(`Error deleting user by ID: ${error.message}`);
+            next();
+          });
+        }
+      };
+  
+  //add the login action to render my form for browser viewing
 login: (req, res) => {
   res.render("users/login");
 }
@@ -51,15 +141,7 @@ validate: (req, res, next) => {
     })
     .trim();
   req.check("email", "Email is invalid").isEmail();
-  req
-    .check("zipCode", "Zip code is invalid")
-    .notEmpty()
-    .isInt()
-    .isLength({
-      min: 5,
-      max: 5
-    })
-    .equals(req.body.zipCode);
+  req.equals(req.body.zipCode);
   req.check("password", "Password cannot be empty").notEmpty();
   req.getValidationResult().then((error) => {
     if (!error.isEmpty()) {
@@ -91,30 +173,3 @@ logout: (req, res, next) => {
   res.locals.redirect = " / " ;
   next();
 }
-
-
-
-exports.getUsersPage = (req, res) => {
-  res.render("contact");
-};
-
-exports.saveUser = (req, res) => {
-  let newUser = new User( {
-    name: req.body.name,
-    geschlecht: req.body.geschlecht,
-    alter: req.body.alter,
-    hobbys: req.body.hobbys,
-    sucht: req.body.sucht,
-    interessiert: req.body.interessiert,
-    wohnort: req.body.wohnort,
-    religion: req.body.religion
-  })
-
-  newUser.save()
-    .then( () => {
-      res.render("homepage");
-    })
-    .catch(error => {
-      res.send(error);
-    });
-};
