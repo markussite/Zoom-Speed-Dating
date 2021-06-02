@@ -55,7 +55,7 @@ const userController = require("./controllers/userController");
 app.use("/", router);
 //app.get("/", homeController.showHomepage);
 router.get("/users", userController.index, userController.indexView);
-router.get("users/new", userController.new);
+router.get("users/new", userController.create);
 router.get("users/:id", userController.show, userController.showView);
 router.get("users/:id/edit", userController.edit);
 router.put("users/:id/update", userController.update, userController.redirectView);
