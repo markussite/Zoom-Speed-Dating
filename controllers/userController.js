@@ -1,5 +1,4 @@
 const User = require("../models/user");
-const passport = require("passport");
   getUserParams = (body) => {
     return {
       name: body.name,
@@ -32,7 +31,7 @@ module.exports = {
     new: (req, res) => {
       res.render("users/new");
     },
-            redirectView: (req, res, next) => {
+    redirectView: (req, res, next) => {
         let redirectPath = res.locals.redirect;
         if (redirectPath) res.redirect(redirectPath);
         else next();
@@ -96,68 +95,22 @@ module.exports = {
           });
         },
 
-        //add the login action to render my form for browser viewing
-      login: (req, res) => {
-        res.render("users/login");
-      },
-
       //add passport registration and flash messaging in the create action
       create: (req, res, next) => {
         if (req.skip) next();
 
         let newUser = new User(getUserParams(req.body));
 
-        User.register(newUser, req.body.password, (e, user) => {
+        User.register(newUser, (e, user) => {
           if (user) {
             req.flash("success", `${user.fullName}'s account created successfully!`);
               res.locals.redirect = "/users";
             next();
           } else {
-            req.flash("error", `Failed to create user account because: ${e.message}.`);
+            req.flash("error", `Failed to create user Profile because: ${e.message}.`);
             res.locals.redirect = "/users/new";
             next();
           }
         });
       },
-
-      //add a validate action
-      validate: (req, res, next) => {
-        req
-          .sanitizeBody("email")
-          .normalizeEmail({
-            all_lowercase: true
-          })
-          .trim();
-        req.check("email", "Email is invalid").isEmail();
-        req.equals(req.body.hobby);
-        req.check("password", "Password cannot be empty").notEmpty();
-        req.getValidationResult().then((error) => {
-          if (!error.isEmpty()) {
-            let messages = error.array().map(e => e.msg);
-            req.skip = true;
-            req.flash("error", messages.join(" and "));
-            res.locals.redirect = '/users/new';
-            next();
-          } else {
-            next();
-          }
-        });
-      },
-
-      //add authentication middleware with redirect and flash-message options
-      authenticate: passport.authenticate("local", {
-        failureRedirect: "/users/login",
-        failureFlash: "Failed to login.",
-        successRedirect: "/",
-        successFlash: "Logged in!"
-      }),
-
-      //logout action
-      logout: (req, res, next) => {
-        req.logout();
-        req.flash("success", "You have been logged out!");
-        res.locals.redirect = " / " ;
-        next();
-      }
-
-      };
+};

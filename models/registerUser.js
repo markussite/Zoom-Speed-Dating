@@ -1,6 +1,6 @@
 const mongoose = require("mongoose"),
   { Schema } = require("mongoose"),
-  User = require("./user");
+  registerUser= require("../models/registerUser");
   registerUserSchema = new Schema({
   name: {
     first: {
@@ -20,10 +20,10 @@ const mongoose = require("mongoose"),
   password: {
     type: String,
     required: true
-  }
+  },
   hobby: [
     {
-      type: Schmea.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Hobby"
     }
   ],
@@ -37,9 +37,9 @@ const mongoose = require("mongoose"),
 }
 );
 
-registerUser.virtual("fullName").get(function(){
-  return `${this.name.first} ${this.name.last}`
-});
+//registerUser. .getInfo("fullName").get(function(){
+ // return `${this.name.first} ${this.name.last}`
+//});
 
 registerUserSchema.pre("save", function (next) {
   let regUser = this;
@@ -55,4 +55,4 @@ registerUserSchema.pre("save", function (next) {
     next();
   }
 });
-module.exports = mongoose.model("registerUser, registerUserSchema")
+module.exports = mongoose.model("registerUser", registerUserSchema)

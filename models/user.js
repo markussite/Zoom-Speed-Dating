@@ -25,9 +25,7 @@ const mongoose = require("mongoose"),
   wohnort: String,
   religion: String
 })
-{
-  timestamps: true
-};
+
 userSchema.methods.getInfo = function () {
   return `Name: ${this.name} Email: ${this.email}`;
 };
