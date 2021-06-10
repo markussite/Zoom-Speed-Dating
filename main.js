@@ -1,4 +1,4 @@
-//require the modules
+const router = require("./routes/index");
 const passport = require("passport"), //passport module
   cookieParser = require("cookie-parser"),
   expressSession = require("express-session"),
@@ -15,13 +15,12 @@ db.once("open", () => {
   console.log("Successfully connected to MongoDB using Mongoose!");
 })
 
-//Require the error handler controller.
-const errorController = require("./controllers/errorController")
+
 
 //Initialise the app
-const express = require("express"),
+const express = require("express").Router(),
   app = express();
-
+app.use("/", router);
 app.set("port",process.env.PORT || 3000);
 
 const methodOverride = require("method-override")
@@ -46,31 +45,8 @@ app.use(
   })
 );
 app.use(express.json());
-
-const router = express.Router();
-const homeController = require("./controllers/homeController");
-const userController = require("./controllers/userController");
-const userRegisterController = require("./controllers/userRegisterController");
-//Add routes for the courses, page, contact page and contact form submission.
-
-app.use("/", router);
-//app.get("/", homeController.showHomepage);
-router.get("/users", userController.index, userController.indexView);
-router.get("/users/new", userController.new);
-router.get("/users/:id", userController.show, userController.showView);
-router.get("/users/:id/edit", userController.edit);
-router.put("/users/:id/update", userController.update, userController.redirectView);
-router.delete("/users/:id/delete", userController.delete, userController.redirectView);
-
-router.get("/usersRegister", userRegisterController.index, userRegisterController.indexView);
-router.get("/usersRegister/new", userRegisterController.new);
-router.get("/usersRegister/:id", userRegisterController.show, userRegisterController.showView);
-router.get("/usersRegister/:id/edit", userRegisterController.edit);
-router.put("/usersRegister/:id/update", userRegisterController.update, userRegisterController.redirectView);
-router.delete("/usersRegister/:id/delete", userRegisterController.delete, userRegisterController.redirectView);
-
-router.use(cookieParser("secretzoomSpeedDating123"));
-router.use(expressSession({
+app.use(cookieParser("secretzoomSpeedDating123"));
+app.use(expressSession({
   secret: "secretzoomSpeedDating123",
   cookie: {
     maxAge: 4000000
@@ -79,31 +55,28 @@ router.use(expressSession({
   saveUninitialized: false
 }));
 
-router.use(passport.initialize());
-router.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 const connectFlash = require("connect-flash"); //connect-flash module
-router.use(connectFlash())
-router.use((req, res, next) => {
+app.use(connectFlash())
+app.use((req, res, next) => {
   res.locals.flashMessages = req.flash();
   next();
 });
 
-router.use(layouts); //Set the application to use the layout.
+app.use(layouts); //Set the application to use the layout.
 
 const expressValidator = require("express-validator") //express validator module
-router.use(expressValidator())
+app.use(expressValidator())
 //add validation middleware to the user reate route
-router.post("/usersRegister/create", function(req,res) {
+app.post("/usersRegister/create", function(req,res) {
   userRegisterController.validate, userRegisterController.create, userRegisterController.redirectView
 });
 
-//Add error handlers as middleware functions.
-app.use(errorController.pageNotFoundError);
-app.use(errorController.internalServerError);
 
 
 const server = app.listen(app.get("port"), () => {

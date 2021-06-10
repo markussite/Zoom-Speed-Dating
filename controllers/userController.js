@@ -26,6 +26,9 @@ module.exports = {
       });
     },
     indexView: (req, res) => {
+      if(req.query.format === "json")
+        res.json(res.locals.users);
+      else
       res.render("users/index");
     },
     new: (req, res) => {
@@ -98,7 +101,6 @@ module.exports = {
       //add passport registration and flash messaging in the create action
       create: (req, res, next) => {
         if (req.skip) next();
-
         let newUser = new User(getUserParams(req.body));
 
         User.register(newUser, (e, user) => {

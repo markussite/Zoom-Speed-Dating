@@ -23,7 +23,10 @@ module.exports = {
             });
     },
     indexView: (req, res) => {
-        res.render("usersRegister/index");
+      if(req.query.format === "json")
+        res.json(res.locals.usersRegister);
+      else
+      res.render("usersRegister/index");
     },
     new: (req, res) => {
         res.render("usersRegister/new");
