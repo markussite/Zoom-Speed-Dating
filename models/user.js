@@ -19,6 +19,12 @@ const mongoose = require("mongoose"),
     min: [1, "Geben sie ein Richtiges Alter an"],
     max: [130, "Geben sie ein Richtiges Alter an"]
   },
+  
+  password: {
+    type: String,
+    required: true
+    },
+
   hobbys: [{type: Schema.Types.ObjectId, ref: "Hobby"}],
   sucht: String,
   interessiert: String,

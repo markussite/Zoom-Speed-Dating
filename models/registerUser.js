@@ -17,10 +17,12 @@ const mongoose = require("mongoose"),
     required: true,
     unique: true
   },
+  
   password: {
     type: String,
     required: true
-  },
+    },
+
   hobby: [
     {
       type: Schema.Types.ObjectId,
