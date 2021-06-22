@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "startdev": "nodemon main.js",
+    "dev": "nodemon main.js",
     "mongo": "docker-compose up -d",
     "mongobash": "docker-compose exec mongo bash",
     "test": "jest"
