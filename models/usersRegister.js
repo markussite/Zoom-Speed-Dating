@@ -1,7 +1,7 @@
 const mongoose = require("mongoose"),
   { Schema } = require("mongoose"),
-  registerUser= require("../models/registerUser");
-  registerUserSchema = new Schema({
+
+  usersRegisterSchema = new Schema({
   name: {
     first: {
       type: String,
@@ -43,7 +43,7 @@ const mongoose = require("mongoose"),
  // return `${this.name.first} ${this.name.last}`
 //});
 
-registerUserSchema.pre("save", function (next) {
+usersRegisterSchema.pre("save", function (next) {
   let regUser = this;
   if (reqUser.regAccount === undefined) {
     User.findeOne({
@@ -57,4 +57,4 @@ registerUserSchema.pre("save", function (next) {
     next();
   }
 });
-module.exports = mongoose.model("registerUser", registerUserSchema)
+module.exports = mongoose.model("usersRegister", usersRegisterSchema)

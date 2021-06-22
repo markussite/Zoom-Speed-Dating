@@ -1,5 +1,6 @@
-const UserRegister = require("../models/registerUser");
+const UsersRegister = require("../models/usersRegister");
 const passport = require("passport");
+const { body, check, validationResult } = require('express-validator')
 getUserParams = (body) => {
     return {
         name: body.name,
@@ -12,7 +13,7 @@ getUserParams = (body) => {
 
 module.exports = {
     index: (req, res, next) => {
-        UserRegister.find()
+        UsersRegister.find()
             .then(usersRegister => {
                 res.locals.usersRegister = usersRegister;
                 next();
@@ -35,7 +36,7 @@ module.exports = {
     },
     show: (req, res, next) => {
         let userId = req.params.id;
-        UserRegister.findById(userId)
+        UsersRegister.findById(userId)
             .then(userRegister => {
                 res.locals.userRegister = userRegister;
                 next();
@@ -51,7 +52,7 @@ module.exports = {
 
     edit: (req, res, next) => {
         let userId = req.params.id;
-        UserRegister.findById(userId)
+        UsersRegister.findById(userId)
             .then(userRegister=> {
                 res.render("usersRegister/edit", {
                     userRegister: userRegister
@@ -66,7 +67,7 @@ module.exports = {
         let userId = req.params.id,
             userRegisterParams = getUserParams(req.body);
 
-        UserRegister.findByIdAndUpdate(userId, {
+        UsersRegister.findByIdAndUpdate(userId, {
             $set: userRegisterParams
         })
             .then(user => {
@@ -81,7 +82,7 @@ module.exports = {
     },
     delete: (req, res, next) => {
         let userId = req.params.id;
-        UserRegister.findByIdAndRemove(userId)
+        UsersRegister.findByIdAndRemove(userId)
             .then(() => {
                 res.locals.redirect = "/usersRegister";
                 next();
@@ -101,9 +102,9 @@ module.exports = {
     create: (req, res, next) => {
         if (req.skip) next();
 
-        let newUser = new UserRegister(getUserParams(req.body));
+        let newUser = new UsersRegister(getUserParams(req.body));
 
-        UserRegister.register(newUser, req.body.password, (e, user) => {
+        UsersRegister.create(newUser, req.body.password, (e, user) => {
             if (user) {
                 req.flash("success", `${user.fullName}'s account created successfully!`);
                 res.locals.redirect = "/usersRegister";
