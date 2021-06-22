@@ -99,20 +99,14 @@ module.exports = {
 
 
     create: (req, res, next) => {
-        if (req.skip) next();
-
-        let newUser = new User(getUserParams(req.body));
-
-        User.register(newUser, (e, user) => {
-            if (user) {
-                req.flash("success", `${user.fullName}'s account created successfully!`);
-                res.locals.redirect = "/users";
-                next();
-            } else {
-                req.flash("error", `Failed to create user Profile because: ${e.message}.`);
-                res.locals.redirect = "/users/new";
-                next();
-            }
+        let userParams = getUserParams(req.body);
+        User.create(userParams).then(user => {
+            res.locals.redirect = "/subscribers";
+            res.locals.subscriber = user;
+            next();
+        }).catch(error => {
+            console.log(`Error saving user:${error.message}`);
+            next(error);
         });
     },
 };
