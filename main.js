@@ -53,7 +53,7 @@ const userController = require("./controllers/userController");
 const userRegisterController = require("./controllers/userRegisterController");
 //Add routes for the courses, page, contact page and contact form submission.
 
-app.use("/", router);
+
 router.get("/", userController.homepage);
 router.get("/users", userController.index, userController.indexView);
 router.get("/users/new", userController.new);
@@ -72,8 +72,8 @@ router.get("/usersRegister/:id/edit", userRegisterController.edit);
 router.put("/usersRegister/:id/update", userRegisterController.update, userRegisterController.redirectView);
 router.delete("/usersRegister/:id/delete", userRegisterController.delete, userRegisterController.redirectView);
 
-router.use(cookieParser("secretzoomSpeedDating123"));
-router.use(expressSession({
+app.use(cookieParser("secretzoomSpeedDating123"));
+app.use(expressSession({
   secret: "secretzoomSpeedDating123",
   cookie: {
     maxAge: 4000000
@@ -82,23 +82,23 @@ router.use(expressSession({
   saveUninitialized: false
 }));
 
-router.use(passport.initialize());
-router.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 const connectFlash = require("connect-flash"); //connect-flash module
-router.use(connectFlash())
-router.use((req, res, next) => {
+app.use(connectFlash())
+app.use((req, res, next) => {
   res.locals.flashMessages = req.flash();
   next();
 });
 
-router.use(layouts); //Set the application to use the layout.
+app.use(layouts); //Set the application to use the layout.
 
 const expressValidator = require("express-validator") //express validator module
-router.use(expressValidator())
+app.use(expressValidator())
 //add validation middleware to the user reate route
 router.post("/usersRegister/create", function(req,res) {
   userRegisterController.validate, userRegisterController.create, userRegisterController.redirectView
@@ -107,7 +107,7 @@ router.post("/usersRegister/create", function(req,res) {
 //Add error handlers as middleware functions.
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
-
+app.use("/", router);
 
 const server = app.listen(app.get("port"), () => {
     console.log(`Server running at http://localhost: ${app.get("port")}`);
