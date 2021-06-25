@@ -31,7 +31,7 @@ module.exports = {
         res.render("users/new");
     },
     homepage: (req, res) => {
-        res.render("homepage");
+        res.render("users/homepage");
     },
     redirectView: (req, res, next) => {
         let redirectPath = res.locals.redirect;
